@@ -39,9 +39,9 @@ def test_album_string_formats_correctly():
         for album in albums
     ]
     assert representations == [
-        "Album(1, A title, 2000, 2)",
-        "Album(2, A title, 2000, 2)",
-        "Album(1, A different title, 2000, 2)",
-        "Album(1, A title, 2001, 2)",
-        "Album(1, A title, 2000, 3)",
+        "Album(1, \'A title\', 2000, 2)",
+        "Album(2, \'A title\', 2000, 2)",
+        "Album(1, \'A different title\', 2000, 2)",
+        "Album(1, \'A title\', 2001, 2)",
+        "Album(1, \'A title\', 2000, 3)",
     ]

@@ -16,4 +16,9 @@ class Album:
         return self.__dict__ == other.__dict__
 
     def __repr__(self):
-        return f"Album({self.id}, {self.title}, {self.release_year}, {self.artist_id})"
+        # return f"Album({self.id}, {self.title}, {self.release_year}, {self.artist_id})"
+        return f"""Album({", ".join(
+            repr(x) for x in [
+                self.id, self.title, self.release_year, self.artist_id
+            ]
+        )})"""

@@ -14,8 +14,9 @@ app = Flask(__name__)
 def get_albums():
     connection = get_flask_database_connection(app)
     repository = AlbumRepository(connection)
-    return str(
-        repository.all()
+    return "\n".join(
+        repr(album)
+        for album in repository.all()
     )
 
 @app.route('/artists', methods=['GET'])
