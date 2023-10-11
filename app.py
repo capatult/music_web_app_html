@@ -23,7 +23,10 @@ def get_albums():
 def get_artists():
     connection = get_flask_database_connection(app)
     repository = ArtistRepository(connection)
-    return str(repository.all())
+    return "\n".join(
+        repr(artist)
+        for artist in repository.all()
+    )
 
 
 # These lines start the server if you run this file directly

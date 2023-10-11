@@ -10,4 +10,8 @@ class Artist:
         return self.__dict__ == other.__dict__
 
     def __repr__(self):
-        return f"Artist({self.id}, {self.name}, {self.genre})"
+        return f"""Artist({", ".join(
+            repr(x) for x in [
+                self.id, self.name, self.genre
+            ]
+        )})"""

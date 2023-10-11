@@ -35,10 +35,9 @@ def test_get_artists_returns_list_of_artists(db_connection, web_client):
     db_connection.seed("seeds/music_web_app.sql")
     response = web_client.get('/artists')
     assert response.status_code == 200
-    assert response.data.decode(UTF_8) == """[\
-Artist(1, Pixies, Rock), \
-Artist(2, ABBA, Pop), \
-Artist(3, Taylor Swift, Pop), \
-Artist(4, Nina Simone, Jazz)\
-]\
+    assert response.data.decode(UTF_8) == """\
+Artist(1, \'Pixies\', \'Rock\')
+Artist(2, \'ABBA\', \'Pop\')
+Artist(3, \'Taylor Swift\', \'Pop\')
+Artist(4, \'Nina Simone\', \'Jazz\')\
 """

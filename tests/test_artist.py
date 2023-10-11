@@ -36,8 +36,8 @@ def test_artist_string_formats_correctly():
         for artist in artists
     ]
     assert representations == [
-        "Artist(1, A name, A genre)",
-        "Artist(2, A name, A genre)",
-        "Artist(1, A different name, A genre)",
-        "Artist(1, A name, A different genre)",
+        "Artist(1, \'A name\', \'A genre\')",
+        "Artist(2, \'A name\', \'A genre\')",
+        "Artist(1, \'A different name\', \'A genre\')",
+        "Artist(1, \'A name\', \'A different genre\')",
     ]
