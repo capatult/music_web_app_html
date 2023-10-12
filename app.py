@@ -38,8 +38,8 @@ def get_albums():
         albums=[
             {
                 "test_id": i,
-                "title": album.title,
-                "release_year": album.release_year
+                "id": album.id,
+                "title": album.title
             }
             for i, album in enumerate(all_albums)
         ]

@@ -4,29 +4,6 @@ from playwright.sync_api import Page, expect
 
 UTF_8 = "utf-8"
 
-# """
-# When: we make a GET request to /albums
-# Then: we should get a list of all albums in the database
-# """
-# def test_get_albums_returns_one_album_per_line_listing(db_connection, web_client):
-#     db_connection.seed("seeds/music_web_app.sql")
-#     response = web_client.get('/albums')
-#     assert response.status_code == 200
-#     assert response.data.decode(UTF_8) == """\
-# Album(1, \'Doolittle\', 1989, 1)
-# Album(2, \'Surfer Rosa\', 1988, 1)
-# Album(3, \'Waterloo\', 1974, 2)
-# Album(4, \'Super Trouper\', 1980, 2)
-# Album(5, \'Bossanova\', 1990, 1)
-# Album(6, \'Lover\', 2019, 3)
-# Album(7, \'Folklore\', 2020, 3)
-# Album(8, \'I Put a Spell on You\', 1965, 4)
-# Album(9, \'Baltimore\', 1978, 4)
-# Album(10, \'Here Comes the Sun\', 1971, 4)
-# Album(11, \'Fodder on My Wings\', 1982, 4)
-# Album(12, \'Ring Ring\', 1973, 2)\
-# """
-
 """
 When: we make a GET request to /artists
 Then: we should get a list of all artists in the database
@@ -48,17 +25,16 @@ Then: it returns HTML with the following in the body:
     <h1>Albums</h1>
 
     <div class="album_info" data-testid="album_{{TEST_ID}}">
-        <span class="album_title">
-            Title: {{TITLE}}
-        </span>
-        <span class="album_release_year
-            Released: {{RELEASE_YEAR}}
+        <span class="link_to_album_page">
+            <a href="/albums/{{ALBUM_ID}}>
+                {{TITLE}}
+            </a>
         </span>
     </div>
 
     <!-- (for each of the 12 albums in the seed data) -->
 """
-def test_get_albums_returns_page_with_all_albums(db_connection, page, test_web_address):
+def test_get_albums_returns_page_with_links_to_all_albums(db_connection, page, test_web_address):
     db_connection.seed("seeds/music_web_app.sql")
 
     page.goto(f"http://{test_web_address}/albums")
@@ -95,15 +71,40 @@ def test_get_albums_returns_page_with_all_albums(db_connection, page, test_web_a
         "1982",
         "1973",
     ]
+    artist_ids = [
+        1,
+        1,
+        2,
+        2,
+        1,
+        3,
+        3,
+        4,
+        4,
+        4,
+        4,
+        2,
+    ]
+    artists = [
+        (None, 'Pixies', 'ABBA', 'Taylor Swift', 'Nina Simone')[i]
+        for i in artist_ids
+    ]
 
     for i in range(12):
+        page.goto(f"http://{test_web_address}/albums")
         album_info_locator = page.get_by_test_id(f"album_{i}")
+        # link_locator = album_info_locator.locator(".link_to_album_page")
+        # link_locator.click()
+        album_info_locator.get_by_text(f"{titles[i]}").click()
 
-        title_locator = album_info_locator.locator(".album_title")
-        release_year_locator = album_info_locator.locator(".album_release_year")
+        # Now this section is the same as in the GET /albums/<id> test
+        expect(page.locator("h1")).to_have_text(titles[i])
 
-        expect(title_locator).to_have_text(f"Title: {titles[i]}")
-        expect(release_year_locator).to_have_text(f"Released: {release_years[i]}")
+        release_year_locator = page.get_by_test_id("release_year")
+        artist_locator = page.get_by_test_id("artist")
+
+        expect(release_year_locator).to_have_text(f"Release year: {release_years[i]}")
+        expect(artist_locator).to_have_text(f"Artist: {artists[i]}")
 
 """
 When: we make a GET request to /albums/<id>

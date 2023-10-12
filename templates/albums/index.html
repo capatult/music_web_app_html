@@ -37,12 +37,9 @@
         <!-- {% if albums | length > 0 %} -->
             {% for album in albums %}
                 <div class="album_info" data-testid="album_{{ album.test_id }}">
-                    <span class="album_title">
-                        Title: {{ album.title }}
-                    </span>
-                    <span class="album_release_year">
-                        Released: {{ album.release_year }}
-                    </span>
+                    <span><a href="/albums/{{ album.id }}" class="link_to_album_page">
+                        {{ album.title }}
+                    </a></span>
                 </div>
             {% endfor %}
         <!-- {% else %}
