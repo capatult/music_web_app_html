@@ -35,7 +35,14 @@ def get_albums():
     all_albums = repository.all()
     return render_template(
         'albums/index.html',
-        albums=all_albums
+        albums=[
+            {
+                "test_id": i,
+                "title": album.title,
+                "release_year": album.release_year
+            }
+            for i, album in enumerate(all_albums)
+        ]
     )
 
 
