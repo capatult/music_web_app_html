@@ -1,5 +1,6 @@
 from lib.album_repository import AlbumRepository
 from lib.album import Album
+import pytest
 
 """
 When: we call AlbumRepository.all
@@ -28,7 +29,7 @@ def test_get_all_records(db_connection):
 
 """
 When: we call AlbumRepository.create
-And: we provide an Album object with values in all columns except `id`
+And:  we provide an Album object with values in all columns except `id`
     (`id` will be autoassigned)
 Then: we create a new record in the `albums` table in the database
     (it returns None)
@@ -55,3 +56,37 @@ def test_create_record(db_connection):
         Album(12, 'Ring Ring', 1973, 2),
         Album(13, 'Voyage', 2022, 2),
     ]
+
+"""
+When: we call AlbumRepository.find
+And:  we provide a value for `id` which corresponds to
+    a record in the `albums` table in the database
+Then: it returns an Album object corresponding to that record
+"""
+def test_get_single_record(db_connection):
+    db_connection.seed("seeds/music_web_app.sql")
+    repository = AlbumRepository(db_connection)
+
+    all_albums = repository.all()
+
+    for album in all_albums:
+        result = repository.find(album.id)
+        assert result == album
+
+
+"""
+When: we call AlbumRepository.find
+And:  we provide a value for `id` which does not correspond to
+    a record in the `albums` table in the database
+"""
+def test_attempt_get_nonexistent_record(db_connection):
+    db_connection.seed("seeds/music_web_app.sql")
+    repository = AlbumRepository(db_connection)
+
+    nonexistent_ids = [0, 13, -1]
+
+    for nonexistent_id in nonexistent_ids:
+        with pytest.raises(Exception) as e:
+            repository.find(nonexistent_id)
+        error_message = str(e.value)
+        assert error_message == "No album exists with the given id"

@@ -22,3 +22,15 @@ class AlbumRepository:
             ]
         )
         return None
+
+    def find(self, album_id):
+        rows = self._connection.execute(
+            'SELECT * FROM albums WHERE id = %s', (
+                album_id,
+            )
+        )
+        if len(rows) == 0:
+            raise Exception("No album exists with the given id")
+        if len(rows) > 1:
+            raise Exception("More than 1 record was returned - CHECK QUERY CORRECTNESS NOW!")
+        return self._convert_row_to_album(rows[0])
