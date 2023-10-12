@@ -45,6 +45,23 @@ def get_albums():
         ]
     )
 
+@app.route('/albums/<int:album_id>', methods=['GET'])
+def get_album_by_id(album_id):
+    connection = get_flask_database_connection(app)
+    album_repository = AlbumRepository(connection)
+    artist_repository = ArtistRepository(connection)
+
+    try:
+        album = album_repository.find(album_id)
+        artist = artist_repository.find(album.artist_id)
+    except Exception:
+        return render_template('error.html'), 500
+    
+    return render_template(
+        'albums/show.html',
+        album=album,
+        artist=artist.name
+    )
 
 # These lines start the server if you run this file directly
 # They also start the server configured to use the test database

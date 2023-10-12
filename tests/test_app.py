@@ -47,9 +47,13 @@ When: we make a GET request to /albums
 Then: it returns HTML with the following in the body:
     <h1>Albums</h1>
 
-    <div>
-        Title: {{TITLE}}
-        Released: {{RELEASE_YEAR}}
+    <div class="album_info" data-testid="album_{{TEST_ID}}">
+        <span class="album_title">
+            Title: {{TITLE}}
+        </span>
+        <span class="album_release_year
+            Released: {{RELEASE_YEAR}}
+        </span>
     </div>
 
     <!-- (for each of the 12 albums in the seed data) -->
@@ -58,6 +62,7 @@ def test_get_albums_returns_page_with_all_albums(db_connection, page, test_web_a
     db_connection.seed("seeds/music_web_app.sql")
 
     page.goto(f"http://{test_web_address}/albums")
+    expect(page.locator("h1")).to_have_text("Albums")
 
     album_info_divs_locator = page.locator(".album_info")
     expect(album_info_divs_locator).to_have_count(12)
@@ -99,3 +104,53 @@ def test_get_albums_returns_page_with_all_albums(db_connection, page, test_web_a
 
         expect(title_locator).to_have_text(f"Title: {titles[i]}")
         expect(release_year_locator).to_have_text(f"Released: {release_years[i]}")
+
+"""
+When: we make a GET request to /albums/<id>
+And:  we provide a value for <id> which corresponds to an existing row in the `albums` table
+Then: it returns HTML with the following in the body
+"""
+def test_get_album_by_id_returns_page_with_album_info_if_id_valid(db_connection, page, test_web_address):
+    db_connection.seed("seeds/music_web_app.sql")
+
+    for album_id, title, release_year, artist in zip(
+        [1, 12],
+        ["Doolittle", "Ring Ring"],
+        ["1989", "1973"],
+        ["Pixies", "ABBA"]
+    ):
+        page.goto(f"http://{test_web_address}/albums/{album_id}")
+        expect(page.locator("h1")).to_have_text(title)
+
+        release_year_locator = page.get_by_test_id("release_year")
+        artist_locator = page.get_by_test_id("artist")
+
+        expect(release_year_locator).to_have_text(f"Release year: {release_year}")
+        expect(artist_locator).to_have_text(f"Artist: {artist}")
+
+"""
+When: we make a GET request to /albums/<id>
+And:  we provide a value for <id> which does not correspond to an existing album
+Then: it returns a 500 status code (Internal server error)
+"""
+def test_get_album_by_id_returns_404_error_if_id_invalid(db_connection, web_client):
+    db_connection.seed("seeds/music_web_app.sql")
+    responses = [
+        web_client.get(f"/albums/{x}") for x in [
+            "0",
+            "13",
+            "-1",
+            "3.14",
+            "hello",
+        ]
+    ]
+    for response, expected_status_code in zip(
+        responses, [
+            500,
+            500,
+            404,
+            404,
+            404,
+        ]
+    ):
+        assert response.status_code == expected_status_code
