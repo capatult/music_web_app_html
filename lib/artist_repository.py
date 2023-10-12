@@ -24,3 +24,15 @@ class ArtistRepository:
             ]
         )
         return None
+
+    def find(self, artist_id):
+        rows = self._connection.execute(
+            'SELECT * FROM artists WHERE id = %s', (
+                artist_id,
+            )
+        )
+        if len(rows) == 0:
+            raise Exception("No artist exists with the given id")
+        if len(rows) > 1:
+            raise Exception("More than 1 record was returned - CHECK QUERY CORRECTNESS NOW!")
+        return self._convert_row_to_artist(rows[0])

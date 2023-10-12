@@ -1,5 +1,6 @@
 from lib.artist_repository import ArtistRepository
 from lib.artist import Artist
+import pytest
 
 """
 When: we call ArtistRepository._convert_row_to_artist
@@ -60,3 +61,38 @@ def test_create_record(db_connection):
         Artist(4, 'Nina Simone', 'Jazz'),
         Artist(5, 'Wild nothing', 'Indie'),
     ]
+
+"""
+When: we call ArtistRepository.find
+And:  we provide a value for `id` which corresponds to
+    a record in the `artists` table in the database
+Then: it returns an Artist object corresponding to that record
+"""
+def test_get_single_record(db_connection):
+    db_connection.seed("seeds/music_web_app.sql")
+    repository = ArtistRepository(db_connection)
+
+    all_artists = repository.all()
+
+    for artist in all_artists:
+        result = repository.find(artist.id)
+        assert result == artist
+
+
+"""
+When: we call ArtistRepository.find
+And:  we provide a value for `id` which does not correspond to
+    a record in the `artists` table in the database
+Then: it raises an exception
+"""
+def test_attempt_get_nonexistent_record(db_connection):
+    db_connection.seed("seeds/music_web_app.sql")
+    repository = ArtistRepository(db_connection)
+
+    nonexistent_ids = [0, 13, -1]
+
+    for nonexistent_id in nonexistent_ids:
+        with pytest.raises(Exception) as e:
+            repository.find(nonexistent_id)
+        error_message = str(e.value)
+        assert error_message == "No artist exists with the given id"

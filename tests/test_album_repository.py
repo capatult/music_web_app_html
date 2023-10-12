@@ -78,6 +78,7 @@ def test_get_single_record(db_connection):
 When: we call AlbumRepository.find
 And:  we provide a value for `id` which does not correspond to
     a record in the `albums` table in the database
+Then: it raises an exception
 """
 def test_attempt_get_nonexistent_record(db_connection):
     db_connection.seed("seeds/music_web_app.sql")
