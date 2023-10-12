@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Music Web App</title>
+        <style type="text/css">
+            body {
+                background-color: floralwhite;
+                color: black;
+                font-size: medium;
+            }
+            .album_info {
+                margin: auto;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                border: solid 5px;
+                border-radius: 10px;
+                border-color: navy;
+                background-color: palegoldenrod;
+                color: black;
+                height: 80px;
+                width: 500px;
+                text-align: center;
+                font-size: 2em;
+                padding: 20px;
+                /* display: inline-block; */
+            }
+            .album_title::after {
+                content: "\a";
+                white-space: pre;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Albums</h1>
+        <div class="all_albums_listing">
+        <!-- {% if albums | length > 0 %} -->
+            {% for album in albums %}
+                <div class="album_info" data-testid="album_{{ loop.index0 }}">
+                    <span class="album_title">
+                        Title: {{ album.title }}
+                    </span>
+                    <span class="album_release_year">
+                        Released: {{ album.release_year }}
+                    </div>
+                </div>
+            {% endfor %}
+        <!-- {% else %}
+            <div>
+                There are no albums to display.
+            </div>
+        {% endif %} -->
+        </div>
+    </body>
+</html>

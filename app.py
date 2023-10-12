@@ -10,14 +10,14 @@ from lib.artist import Artist
 app = Flask(__name__)
 
 # == Your Routes Here ==
-@app.route('/albums', methods=['GET'])
-def get_albums():
-    connection = get_flask_database_connection(app)
-    repository = AlbumRepository(connection)
-    return "\n".join(
-        repr(album)
-        for album in repository.all()
-    )
+# @app.route('/albums', methods=['GET'])
+# def get_albums():
+#     connection = get_flask_database_connection(app)
+#     repository = AlbumRepository(connection)
+#     return "\n".join(
+#         repr(album)
+#         for album in repository.all()
+#     )
 
 @app.route('/artists', methods=['GET'])
 def get_artists():
@@ -26,6 +26,16 @@ def get_artists():
     return "\n".join(
         repr(artist)
         for artist in repository.all()
+    )
+
+@app.route('/albums', methods=['GET'])
+def get_albums():
+    connection = get_flask_database_connection(app)
+    repository = AlbumRepository(connection)
+    all_albums = repository.all()
+    return render_template(
+        'albums/index.html',
+        albums=all_albums
     )
 
 
