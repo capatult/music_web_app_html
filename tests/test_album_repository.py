@@ -32,13 +32,17 @@ When: we call AlbumRepository.create
 And:  we provide an Album object with values in all columns except `id`
     (`id` will be autoassigned)
 Then: we create a new record in the `albums` table in the database
-    (it returns None)
+    (it returns the same Album object as passed in,
+    with the `id` attribute set to the autoassigned value)
 """
 def test_create_record(db_connection):
     db_connection.seed("seeds/music_web_app.sql")
     repository = AlbumRepository(db_connection)
 
-    repository.create(Album(None, "Voyage", 2022, 2))
+    album_1 = Album(None, "Voyage", 2022, 2)
+    create_return_value = repository.create(album_1)
+    assert create_return_value is None
+    assert album_1 == Album(13, 'Voyage', 2022, 2)
 
     result = repository.all()
     assert result == [

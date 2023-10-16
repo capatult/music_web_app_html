@@ -15,12 +15,14 @@ class AlbumRepository:
         return [self._convert_row_to_album(row) for row in rows]
 
     def create(self, album):
-        self._connection.execute(
-            'INSERT INTO albums (title, release_year, artist_id) VALUES (%s, %s, %s)',
+        # Side effect: set `album.id`
+        rows = self._connection.execute(
+            'INSERT INTO albums (title, release_year, artist_id) VALUES (%s, %s, %s) RETURNING id',
             [
                 album.title, album.release_year, album.artist_id
             ]
         )
+        album.id = rows[0]["id"]
         return None
 
     def find(self, album_id):

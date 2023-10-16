@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Music Web App</title>
+        <style>
+            body {
+                background-color: floralwhite;
+                color: black;
+                font-size: medium;
+            }
+            .album_info {
+                margin: auto;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                border: solid 5px;
+                border-radius: 10px;
+                border-color: navy;
+                background-color: palegoldenrod;
+                color: black;
+                height: 80px;
+                width: 500px;
+                text-align: center;
+                font-size: 2em;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Create New Album</h1>
+        <form action="/albums" method="post">
+            {% if errors %}
+                <p data-testid="errors">
+                    Your submission had the following errors: {{ errors }}
+                </p>
+            {% endif %}
+
+            <p>
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title">
+            </p>
+            <p>
+                <label for="release_year">Release year</label>
+                <input type="number" name="release_year" id="release_year">
+            </p>
+            <p>
+                <label for="artist_id">Artist</label>
+                <select name="artist_id" id="artist_id">
+                    {% for artist in artists %}
+                        <option value="{{ artist.id }}">{{ artist.name }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+
+            <p>
+                <input type="submit" value="Submit form">
+            </p>
+
+
+        </form>
+    </body>
+
+</html>

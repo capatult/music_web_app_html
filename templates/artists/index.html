@@ -9,14 +9,14 @@
                 color: black;
                 font-size: medium;
             }
-            .album_info {
+            .artist_info {
                 margin: auto;
                 margin-top: 10px;
                 margin-bottom: 10px;
                 border: solid 5px;
                 border-radius: 10px;
-                border-color: navy;
-                background-color: palegoldenrod;
+                border-color: darkred;
+                background-color: paleturquoise;
                 color: black;
                 height: 80px;
                 width: 500px;
@@ -28,19 +28,19 @@
         </style>
     </head>
     <body>
-        <h1>Albums</h1>
-        <div class="all_albums_listing">
-        <!-- {% if albums | length > 0 %} -->
-            {% for album in albums %}
-                <div class="album_info" data-testid="album_{{ album.test_id }}">
-                    <span><a href="/albums/{{ album.id }}" class="link_to_album_page">
-                        {{ album.title }}
+        <h1>Artists</h1>
+        <div class="all_artists_listing">
+        <!-- {% if artists | length > 0 %} -->
+            {% for artist in artists %}
+                <div class="artist_info" data-testid="artist_{{ artist.test_id }}">
+                    <span><a href="/artists/{{ artist.id }}" class="link_to_artist_page">
+                        {{ artist.name }}
                     </a></span>
                 </div>
             {% endfor %}
         <!-- {% else %}
             <div>
-                There are no albums to display.
+                There are no artists to display.
             </div>
         {% endif %} -->
         </div>

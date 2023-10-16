@@ -19,7 +19,10 @@ CREATE TABLE albums (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255),
     release_year INTEGER,
-    artist_id INTEGER
+    artist_id INTEGER,
+    FOREIGN KEY (artist_id)
+        REFERENCES artists(id)
+        ON DELETE CASCADE
 );
 
 -- Step 3: add some example records
